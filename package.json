@@ -10,6 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "i2c-bus": "^4.0.5"
+    "async-q": "^0.3.1",
+    "i2c-bus": "^4.0.5",
+    "oled-font-5x7": "^1.0.3",
+    "oled-i2c-bus": "^1.0.10",
+    "raspberry-info": "^1.0.4"
   }
 }
