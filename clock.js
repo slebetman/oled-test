@@ -51,18 +51,25 @@ setInterval(function(){
 	var ip = os.networkInterfaces().wlan0[0].address;
 	
 	if (hh == 0) hh = 12;
-		
+
+	if (ip != prevIP) {
+		oled.clearDisplay();
+		prevM = null;
+		prevIP = ip;
+		if (ip.length > 21) {
+			ip = ip.substr(0,18) + '..';
+		}
+		var len = ip.length;
+		var xpos = Math.round((10.5-(len/2))*6)+1;
+		oled.setCursor(xpos,46);
+		oled.writeString(font,1,ip,1,true);
+	}		
 	if (m !== prevM) {
 		prevM = m;	
 		oled.setCursor(0,10);
 		oled.writeString(font,4,`${pad(hh)}:${pad(m)}`,1,true);
 		oled.setCursor(108,25);
 		oled.writeString(font,2,`${a}`,1,true);
-	}
-	if (ip != prevIP) {
-		prevIP = ip;
-		oled.setCursor(30,46);
-		oled.writeString(font,1,ip,1,true);
 	}
 	oled.setCursor(108,10);
 	oled.writeString(font,2,`${pad(s)}`,1,true);
