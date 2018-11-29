@@ -2,7 +2,7 @@
 
 var i2c = require('i2c-bus');
 var i2c_OLED = i2c.openSync(1);
-var font = require('./regularfont');
+var font = require('./fixedfont');
 
 process.on('exit',() => i2c_OLED.closeSync());
 
@@ -75,12 +75,14 @@ function i2c_OLED_init () {
 
 function clear () {
 	i2c_OLED_send_cmd(0x20,[0x02]);  // set page addressing mode
-	i2c_OLED_send_cmd(0x00); // set x coordinates
-	i2c_OLED_send_cmd(0x10); // set x coordinates
 	
 	for (var i=0;i<8;i++) {
+		console.log(i);
+		i2c_OLED_send_cmd(0x00); // set x coordinates
+		i2c_OLED_send_cmd(0x10); // set x coordinates
 		i2c_OLED_send_cmd(0xb0 | i);   // set y coordinates
-		i2c_OLED_send_data('0'.repeat(128).split(''));
+		i2c_OLED_send_data('0'.repeat(64).split(''));
+		i2c_OLED_send_data('0'.repeat(64).split(''));
 	}
 	i2c_OLED_send_cmd(0x00); // set x coordinates
 	i2c_OLED_send_cmd(0x10); // set x coordinates
@@ -118,7 +120,7 @@ function getFont (ascii) {
 	for (var i=0; i<5; i++) {
 		p = pixels[i];
 		if (p == 0xff) break;
-		ret.push(reverseBits(p));
+		ret.push(p);
 	}
 	ret.push(0x00);
 	// ret.push(0x00);
@@ -135,31 +137,50 @@ function string2pixels (txt) {
 		pixels.push.apply(pixels,getFont(txt[i]));
 	}
 	
+	console.log(pixels.length);
+	
 	return pixels;
 }
 
 i2c_OLED_init();
 clear();
 
-i2c_OLED_send_cmd(0x20,[0x02]);  // set page addressing mode
 i2c_OLED_send_cmd(0x00); // set x coordinates
 i2c_OLED_send_cmd(0x10); // set x coordinates
 i2c_OLED_send_cmd(0xb0);   // set y coordinates
-// i2c_OLED_send_data([0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff]);
-i2c_OLED_send_data(string2pixels('The "Glass" is 1/2 full..'));
-
-i2c_OLED_send_cmd(0x00); // set x coordinates
-i2c_OLED_send_cmd(0x10); // set x coordinates
-i2c_OLED_send_cmd(0xb1);   // set y coordinates
 i2c_OLED_send_data(string2pixels('The quick brown fox'));
 
 i2c_OLED_send_cmd(0x00); // set x coordinates
 i2c_OLED_send_cmd(0x10); // set x coordinates
-i2c_OLED_send_cmd(0xb2);   // set y coordinates
+i2c_OLED_send_cmd(0xb1);   // set y coordinates
 i2c_OLED_send_data(string2pixels('jumps over the lazy'));
 
 i2c_OLED_send_cmd(0x00); // set x coordinates
 i2c_OLED_send_cmd(0x10); // set x coordinates
-i2c_OLED_send_cmd(0xb3);   // set y coordinates
-i2c_OLED_send_data(string2pixels('dog!'));
+i2c_OLED_send_cmd(0xb2);   // set y coordinates
+i2c_OLED_send_data(string2pixels('dog.'));
 
+i2c_OLED_send_cmd(0x00); // set x coordinates
+i2c_OLED_send_cmd(0x10); // set x coordinates
+i2c_OLED_send_cmd(0xb3);   // set y coordinates
+i2c_OLED_send_data(string2pixels('THE QUICK BROWN FOX'));
+
+i2c_OLED_send_cmd(0x00); // set x coordinates
+i2c_OLED_send_cmd(0x10); // set x coordinates
+i2c_OLED_send_cmd(0xb4);   // set y coordinates
+i2c_OLED_send_data(string2pixels('JUMPS OVER THE LAZY'));
+
+i2c_OLED_send_cmd(0x00); // set x coordinates
+i2c_OLED_send_cmd(0x10); // set x coordinates
+i2c_OLED_send_cmd(0xb5);   // set y coordinates
+i2c_OLED_send_data(string2pixels('DOG!'));
+
+i2c_OLED_send_cmd(0x00); // set x coordinates
+i2c_OLED_send_cmd(0x10); // set x coordinates
+i2c_OLED_send_cmd(0xb6);   // set y coordinates
+i2c_OLED_send_data(string2pixels('0123456789%'));
+
+i2c_OLED_send_cmd(0x00); // set x coordinates
+i2c_OLED_send_cmd(0x10); // set x coordinates
+i2c_OLED_send_cmd(0xb7);   // set y coordinates
+i2c_OLED_send_data(string2pixels('@#$^&*+-_ (symbols)'));

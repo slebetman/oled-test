@@ -14,7 +14,7 @@ var oled = new oled(i2cBus, opts);
 
 oled.clearDisplay();
 
-oled.setCursor(0,0);
-oled.writeString(font,1,"Hello Dave..",1,true);
+//oled.setCursor(0,0);
+//oled.writeString(font,1,"Hello Dave..",1,true);
 
 oled.update();

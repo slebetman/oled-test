@@ -16,21 +16,11 @@ var opts = {
   height: 64
 };
 
-var loop = null;
-
-function exitHandler () {
-	clearInterval(loop);
-	loop = null;
+process.on('exit', () => {
 	oled.clearDisplay();
 	oled.update();
-}
-
-[
-	'exit',
-	'SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGILL', 'SIGTRAP', 'SIGABRT',
-	'SIGBUS', 'SIGFPE', 'SIGUSR1', 'SIGSEGV', 'SIGUSR2', 'SIGTERM'
-].forEach(e => process.on(e, exitHandler));
-
+});
+ 
 var oled = new oled(i2cBus, opts);
 
 function pad (n) {
@@ -43,12 +33,14 @@ function pad (n) {
 	return n;
 }
 
+oled.invertDisplay(true);
+
 var prevM;
 oled.clearDisplay();
-oled.dimDisplay(false);
+oled.update();
 var prevIP;
 
-loop = setInterval(function(){
+setInterval(function(){
 	var t = new Date();
 	
 	var h = t.getHours();
@@ -90,8 +82,6 @@ loop = setInterval(function(){
 		memAvailable: raspInfo.getMemoryAvailable
 	})	
 	.then(info => {
-		if (loop == null) return;
-	
 		var cpu = info.cpu;
 		var mA = parseFloat(info.memAvailable)/1024;
 		var mT = parseFloat(info.memTotal)/1024;
@@ -107,7 +97,6 @@ loop = setInterval(function(){
 				`ram:${(mU*100).toFixed(1)}%`,
 			1,true);
 		}
-		
 		oled.update();
 	});
 },1000);
